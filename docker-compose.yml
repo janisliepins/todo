@@ -2,6 +2,19 @@ version: "3.8"
 
 
 services:
+  app:
+    image: maven:3.9-eclipse-temurin-17-alpine
+    restart: always
+    ports:
+      - 8081:8081
+    working_dir: /app
+    command: ["mvn", "clean", "spring-boot:run"]
+    volumes:
+      - ./todo-rest:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:15.3-alpine3.18
     restart: always
