@@ -1,15 +1,14 @@
-package com.jlinden.todorest;
+package com.jlinden.todorest.model;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@Entity // This tells Hibernate to make a table out of this class
-class Todo {
+@Entity
+public class Todo {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private Boolean isCompleted = false;
 
@@ -36,12 +35,21 @@ class Todo {
         this.title = title;
     }
 
-    public Boolean getCompleted() {
+    public Boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(Boolean completed) {
+    public void setIsCompleted(Boolean completed) {
         isCompleted = completed;
+    }
+
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", isCompleted=" + isCompleted +
+                '}';
     }
 
     @Override
@@ -55,14 +63,5 @@ class Todo {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, isCompleted);
-    }
-
-    @Override
-    public String toString() {
-        return "Todo{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", isCompleted=" + isCompleted +
-                '}';
     }
 }

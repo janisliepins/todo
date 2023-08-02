@@ -3,49 +3,60 @@ version: "3.8"
 services:
   client:
     image: node:18.7.0-slim
+    restart: always
+    user: "1000:1000"
     tty: true
     ports:
-      - 8082:8082
+      - 3000:3000
     working_dir: /app
     volumes:
       - ./todo-client:/app
+    networks:
+      - dev-todo-net
 
-  app:
+  rest:
     image: maven:3.9-eclipse-temurin-17-alpine
     restart: always
+    user: "1000:1000"
+    entrypoint: ["sh"]
+    tty: true
     ports:
       - 8081:8081
     working_dir: /app
-    command: [ "mvn", "clean", "spring-boot:run" ]
     volumes:
       - ./todo-rest:/app
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - dev-todo-net
 
   db:
     image: postgres:15.3-alpine3.18
     restart: always
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
     volumes:
-      - data:/var/lib/postgresql/data
+      - dev-db-data:/var/lib/postgresql/data
+    networks:
+      - dev-todo-net
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8080:8080
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - dev-todo-net
 
 volumes:
-  data:
+  dev-db-data:
+networks:
+  dev-todo-net:
