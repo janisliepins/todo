@@ -9,7 +9,7 @@ export default function App() {
   const [todos, setTodos] = useState([]);
 
   const fetchTodos = async () => {
-    const response = await axios.get("http://localhost:8081/todos");
+    const response = await axiosInstance.get("/todos");
     setTodos(response.data);
   };
 
@@ -18,7 +18,7 @@ export default function App() {
   }, [todos]);
 
   const createTodo = async (newTodoTitle) => {
-    const response = await axios.post("http://localhost:8081/todos", {
+    const response = await axiosInstance.post("/todos", {
       title: newTodoTitle,
     });
 
@@ -26,7 +26,7 @@ export default function App() {
   };
 
   const deleteTodo = async (id) => {
-    await axios.delete(`http://localhost:8081/todos/${id}`);
+    await axiosInstance.delete(`/todos/${id}`);
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
@@ -34,7 +34,7 @@ export default function App() {
     const todo = todos.find((todo) => todo.id === id);
     const updatedTodo = { ...todo, isCompleted };
 
-    await axios.put(`http://localhost:8081/todos/${id}`, updatedTodo);
+    await axiosInstance.put(`/todos/${id}`, updatedTodo);
 
     setTodos((currentTodos) => {
       return currentTodos.map((todo) => {
@@ -45,6 +45,10 @@ export default function App() {
       });
     });
   };
+
+  const axiosInstance = axios.create({
+    baseURL: import.meta.env.VITE_REST_URL || "http://localhost:8081",
+  });
 
   return (
     <>
