@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+  client:
+    image: test-todo-client-image:latest
+    build:
+      context: todo-client
+      target: builder
+    container_name: test-todo-client
+    restart: always
+    ports:
+      - 3001:3001
+    depends_on:
+      rest:
+        condition: service_healthy
+    networks:
+      - test-todo-net
+    environment:
+      VITE_PORT: 3001
+
+  rest:
+    image: test-todo-rest-image:latest
+    build:
+      context: todo-rest
+      target: builder
+    container_name: test-todo-rest
+    restart: always
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:8081/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      POSTGRES_DB: todo_db
+      SPRING_PROFILES_ACTIVE: test
+    ports:
+      - 8081:8081
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - test-todo-net
+
+  db:
+    image: postgres:15.3-alpine3.18
+    container_name: test-todo-db
+    restart: always
+    environment:
+      POSTGRES_DB: todo_db
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    networks:
+      - test-todo-net
+
+volumes:
+  test-db-data:
+networks:
+  test-todo-net:
