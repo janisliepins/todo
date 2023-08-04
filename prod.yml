@@ -9,7 +9,7 @@ services:
     container_name: test-todo-client
     restart: always
     ports:
-      - 3001:3001
+      - 3002:3002
     depends_on:
       rest:
         condition: service_healthy
