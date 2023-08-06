@@ -5,24 +5,22 @@ services:
     image: test-todo-client-image:latest
     build:
       context: todo-client
-      target: builder
+      target: test
     container_name: test-todo-client
     restart: always
     ports:
-      - 3001:3001
+      - 3000:3000
     depends_on:
       rest:
         condition: service_healthy
     networks:
       - test-todo-net
-    environment:
-      VITE_PORT: 3001
 
   rest:
     image: test-todo-rest-image:latest
     build:
       context: todo-rest
-      target: builder
+      target: test
     container_name: test-todo-rest
     restart: always
     healthcheck:
