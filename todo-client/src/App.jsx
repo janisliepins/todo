@@ -15,7 +15,7 @@ export default function App() {
 
   useEffect(() => {
     fetchTodos();
-  }, [todos]);
+  }, []);
 
   const createTodo = async (newTodoTitle) => {
     const response = await axios.post("/todos", {
