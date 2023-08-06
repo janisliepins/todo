@@ -8,4 +8,8 @@ Inside client service conteiner: `npm run dev`
 
 ### Run test environment
 
-TO DO
+`docker compose -f test.yml up -d --build`
+
+### Run prod environment
+
+`docker compose -f prod.yml up -d --build`
