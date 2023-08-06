@@ -47,7 +47,7 @@ export default function App() {
   };
 
   const axiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_REST_URL || "http://localhost:8081",
+    baseURL: import.meta.env.VITE_REST_URL || "http://3.73.37.21:8081",
   });
 
   return (
