@@ -19,7 +19,8 @@ services:
       VITE_PORT: 80
     volumes:
       - /home/ubuntu/.htpasswd:/etc/nginx/.htpasswd
-      - /etc/letsencrypt/live/jlinden.net:/etc/nginx/ssl/live/todo.jlinden.net
+      - /home/ubuntu/privkey.pem:/etc/nginx/ssl/live/todo.jlinden.net/privkey.pem
+      - /home/ubuntu/fullchain.pem:/etc/nginx/ssl/live/todo.jlinden.net/fullchain.pem
 
   rest:
     image: prod-todo-rest-image:latest
